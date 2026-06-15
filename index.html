@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Tennis</title>
+    <title>Just Pong</title>
     <style>
         body {
             background-color: #03060f;
@@ -39,14 +39,14 @@
             border-radius: 8px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
             background: #02040a;
-            cursor: none; /* Versteckt den Cursor für besseres Spielgefühl */
+            cursor: none; 
         }
     </style>
 </head>
 <body>
 
-    <h1>RETRO TENNIS</h1>
-    <p>Move your mouse up and down to control the left paddle. First to 7 points wins!</p>
+    <h1>JUST PONG</h1>
+    <p>Move your mouse up and down to control the left paddle. First to 3 points wins!</p>
     
     <canvas id="pongCanvas" width="850" height="500"></canvas>
 
@@ -57,11 +57,10 @@
         // --- GAME VARIABLES ---
         let playerScore = 0;
         let aiScore = 0;
-        const winningScore = 7;
+        const winningScore = 3; 
         let gameOver = false;
         let winMessage = "";
 
-        // Paddle Configuration
         const paddleWidth = 12;
         const paddleHeight = 90;
 
@@ -75,25 +74,23 @@
             x: canvas.width - 30 - paddleWidth,
             y: canvas.height / 2 - paddleHeight / 2,
             score: 0,
-            speed: 3.5 // Controls AI difficulty
+            speed: 5.0 
         };
 
         const ball = {
             x: canvas.width / 2,
             y: canvas.height / 2,
             radius: 7,
-            vx: 4,
-            vy: 3,
-            speed: 5
+            vx: 7,     
+            vy: 5,     
+            speed: 8.5 
         };
 
         // --- MOUSE INPUT ---
         window.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
-            // Center the paddle on the mouse Y position
             player.y = e.clientY - rect.top - paddleHeight / 2;
 
-            // Constrain player paddle inside canvas bounds
             if (player.y < 10) player.y = 10;
             if (player.y > canvas.height - paddleHeight - 10) player.y = canvas.height - paddleHeight - 10;
         });
@@ -102,14 +99,12 @@
         function resetBall(subtractor) {
             ball.x = canvas.width / 2;
             ball.y = canvas.height / 2;
-            // Send ball towards the scorer
-            ball.vx = subtractor * 4;
-            ball.vy = (Math.random() - 0.5) * 6;
-            ball.speed = 5;
+            ball.vx = subtractor * 7;
+            ball.vy = (Math.random() - 0.5) * 8;
+            ball.speed = 8.5; 
         }
 
         function checkCollision(b, p) {
-            // Simple bounding box collision detection
             return b.x + b.radius > p.x && 
                    b.x - b.radius < p.x + paddleWidth && 
                    b.y + b.radius > p.y && 
@@ -119,45 +114,32 @@
         function update() {
             if (gameOver) return;
 
-            // 1. Move the Ball
             ball.x += ball.vx;
             ball.y += ball.vy;
 
-            // 2. Ball wall bounce (Top & Bottom)
             if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
                 ball.vy = -ball.vy;
             }
 
-            // 3. AI Paddle Movement (Smooth tracking)
             let aiTarget = ball.y - paddleHeight / 2;
-            ai.y += (aiTarget - ai.y) * 0.08; // Smooth interpolation
+            ai.y += (aiTarget - ai.y) * 0.12; 
 
-            // Constrain AI paddle inside bounds
             if (ai.y < 10) ai.y = 10;
             if (ai.y > canvas.height - paddleHeight - 10) ai.y = canvas.height - paddleHeight - 10;
 
-            // 4. Check Paddles Collisions
             let activePaddle = (ball.x < canvas.width / 2) ? player : ai;
             
             if (checkCollision(ball, activePaddle)) {
-                // Calculate hit point relative to paddle center (-1 to 1)
                 let hitPoint = (ball.y - (activePaddle.y + paddleHeight / 2)) / (paddleHeight / 2);
-                
-                // Calculate bounce angle (max 45 degrees)
                 let angle = hitPoint * (Math.PI / 4);
-                
-                // Determine direction based on which paddle was hit
                 let direction = (ball.x < canvas.width / 2) ? 1 : -1;
                 
-                // Gradually increase ball speed on each hit for excitement
-                ball.speed += 0.3;
+                ball.speed += 0.5; 
                 
-                // Apply new velocities
                 ball.vx = direction * ball.speed * Math.cos(angle);
                 ball.vy = ball.speed * Math.sin(angle);
             }
 
-            // 5. Score Points & Check Win Condition
             if (ball.x - ball.radius < 0) {
                 aiScore++;
                 if (aiScore >= winningScore) {
@@ -178,11 +160,9 @@
         }
 
         function draw() {
-            // Deep midnight blue background
             ctx.fillStyle = '#02040a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 1. Draw Net (Center Line)
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
             ctx.lineWidth = 2;
             ctx.setLineDash([10, 10]);
@@ -190,20 +170,17 @@
             ctx.moveTo(canvas.width / 2, 0);
             ctx.lineTo(canvas.width / 2, canvas.height);
             ctx.stroke();
-            ctx.setLineDash([]); // Reset dash
+            ctx.setLineDash([]); 
 
-            // 2. Draw Player Paddle (Neon Cyan)
             ctx.fillStyle = '#00d2ff';
             ctx.shadowBlur = 10;
             ctx.shadowColor = '#00d2ff';
             ctx.fillRect(player.x, player.y, paddleWidth, paddleHeight);
 
-            // 3. Draw AI Paddle (Neon Magenta)
             ctx.fillStyle = '#ff007f';
             ctx.shadowColor = '#ff007f';
             ctx.fillRect(ai.x, ai.y, paddleWidth, paddleHeight);
 
-            // 4. Draw Ball (Glowing White)
             if (!gameOver) {
                 ctx.fillStyle = '#ffffff';
                 ctx.shadowColor = '#ffffff';
@@ -211,16 +188,14 @@
                 ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
                 ctx.fill();
             }
-            ctx.shadowBlur = 0; // Reset glow
+            ctx.shadowBlur = 0; 
 
-            // 5. Draw Scores
             ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
             ctx.font = 'bold 48px "Segoe UI", sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(playerScore, canvas.width / 4, 70);
             ctx.fillText(aiScore, (canvas.width / 4) * 3, 70);
 
-            // 6. Game Over Screen
             if (gameOver) {
                 ctx.fillStyle = 'rgba(2, 4, 10, 0.85)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
