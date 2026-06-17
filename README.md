@@ -5,7 +5,7 @@ A fast-paced, neon-styled remake of the absolute arcade classic, built completel
 ## 🎮 Live Demo
 **No technical knowledge needed!** You can play the game directly in your browser by clicking the link below:
 
-👉 [**CLICK HERE TO PLAY THE GAME**](https://YOUR-GITHUB-USERNAME.github.io/YOUR-REPOSITORY-NAME/)
+👉 [**CLICK HERE TO PLAY THE GAME**](https://kristina-neureuther.github.io/just-pong/)
 
 ---
 
