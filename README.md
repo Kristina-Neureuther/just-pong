@@ -2,6 +2,8 @@
 
 A fast-paced, neon-styled remake of the absolute arcade classic, built completely from scratch using HTML5 Canvas and Vanilla JavaScript. No external libraries or installations required!
 
+## Kristina Neureuther – Systems Thinking & Strategy
+
 ## 🎮 Live Demo
 **No technical knowledge needed!** You can play the game directly in your browser by clicking the link below:
 
